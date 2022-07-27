@@ -1,0 +1,106 @@
+.sidebar{
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    width: 255px;
+    height: 529px;
+}
+.gradient-box{
+    background: radial-gradient(128.88% 128.88% at 103.9% -10.39%, #E84D70 0%, #A337F6 53.09%, #28A7ED 100%) /* warning: gradient uses a rotation that is not supported by CSS and may not behave as expected */;
+    border-radius: 10px;
+    width: 255px;
+    height: 137px;
+    padding-left: 24px;
+    padding-top: 62px;
+    box-sizing: border-box;
+}
+.categories{
+    width: 255px;
+    min-height: 166px;
+    background: #FFFFFF;
+    border-radius: 10px;
+    box-sizing: border-box;
+    display: flex;
+    padding-left: 24px;
+    padding-top: 24px;
+    padding-bottom: 24px;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+.roadmap{
+    width: 255px;
+    min-height: 178px;
+    padding-left: 24px;
+    padding-top: 24px;
+    padding-bottom: 24px;
+    padding-right: 24px;
+    background: #FFFFFF;
+    border-radius: 10px;
+    box-sizing: border-box;
+}
+.flexible{
+    display: flex;
+    justify-content: space-between;
+}
+.circle{
+    height: 13px;
+    width: 13px;
+    background-color: #F49F85;
+    border-radius: 50%;
+    margin-bottom: 8px;
+}
+.roadmap-nodes{
+    display: flex;
+    gap: 20px;
+}
+.inprogress{
+    background-color: #AD1FEA;
+}
+.addmargin{
+    display: flex;
+    gap: 8px;
+}
+.live{
+    background-color: #62BCFA;
+}
+.roadmap-title{
+    color: #3A4374;
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 24px;
+}
+.view{
+    color: #4661E6;
+    font-size: 13px;
+    font-weight: 600;
+    text-decoration: underline;
+}
+h1{
+    color: #FFFFFF;
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 0;
+}
+p{
+    color: #FFFFFF;
+    font-size: 15px;
+    font-weight: 500;
+    margin-top: 0; 
+}
+button{
+    color: #4661E6;
+    background-color: #F2F4FF;
+    border-radius: 10px;
+    border: none;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 5px 16px 5px 16px;
+}
+@import-normalize;
+button:hover{
+    background-color: #CFD7FF;
+}
+.categories-btn:active{
+    background-color: #4661E6;
+    color: #FFFFFF;
+}
