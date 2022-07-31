@@ -1,7 +1,7 @@
 import React from 'react'
 import "./style.css";
 
-const Sidebar = () => {
+const Sidebar = ({handleFilterItems, filterType, buttons}) => {
   return (
     <div className='sidebar'>
       <div className="gradient-box">
@@ -9,12 +9,17 @@ const Sidebar = () => {
         <p>Feedback Board</p>
       </div>
       <div className="categories">
-        <button className='categories-btn'>All</button>
-        <button className='categories-btn'>UI</button>
-        <button className='categories-btn'>UX</button>
-        <button className='categories-btn'>Enhancement</button>
-        <button className='categories-btn'>Bug</button>
-        <button className='categories-btn'>Feature</button>
+      {buttons.map((item)=>(
+            <button 
+            onClick={() => handleFilterItems(item.type)}
+            key={item.type}
+            type="button"
+            className={`categories-btn${
+              filterType === item.type ? "-active" : ""
+            }`}>
+            {item.label}
+          </button>
+          ))}
       </div>
       <div className="roadmap">
         <div className='flexible addmargin'><div className="roadmap-title">Roadmap</div>

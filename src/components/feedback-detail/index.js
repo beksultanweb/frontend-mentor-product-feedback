@@ -21,7 +21,7 @@ export const ArrowUp = styled("div")`
     -webkit-transform: rotate(-135deg);
 `;
 
-const FeedbackDetail = ({handleSuggestionClick, data}) => {
+const FeedbackDetail = ({handleSuggestionClick, addPlusOneUpvote, handleEditFeedbackClick, data}) => {
     // console.log("data: ", data)
     const [newComment, setNewComment] = useState("");
     const [limit, setLimit] = useState(250);
@@ -33,11 +33,12 @@ const FeedbackDetail = ({handleSuggestionClick, data}) => {
   return (
     <div className='feedback-detail-content'>
         <div className='feedback-detail-buttons'><button className='go-back' onClick={handleSuggestionClick}><Arrow/>Go back</button>
-        <button className='edit-feedback'>Edit Feedback</button></div>
-        
-            <div key={data.id} className="suggestion-item">
-            <div className='suggestion-info'>
+        <button className='edit-feedback' onClick={handleEditFeedbackClick}>Edit Feedback</button></div>
+            <div key={data.id}>
             <button className='upvote'><ArrowUp/>{data.upvotes}</button>
+            <div className="suggestion-item">
+            <div className='suggestion-info'>
+            
             <div>
                 <div className="suggestion-title">{data.title}</div>
                 <div className="suggestion-descr">{data.description}</div>
@@ -47,6 +48,8 @@ const FeedbackDetail = ({handleSuggestionClick, data}) => {
             <div className='suggestion-comments'><img src="./assets/shared/icon-comments.svg" alt="comments" />{data.comments? data.comments.length: 0}</div>
             
             </div>
+            </div>
+            
         {data.comments?
         <div className='feedback-detail-comments'>
         <div className="roadmap-title">{data.comments? data.comments.length: 0} comments</div>

@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import "./style.css";
-import { useState } from "react";
+import Select from "react-select";
 
 export const Arrow = styled("div")`
     border: solid #4661E6;
@@ -12,11 +12,7 @@ export const Arrow = styled("div")`
     -webkit-transform: rotate(135deg);
 `;
 
-const AddFeedback = ({handleAddFeedbackClick}) => {
-    const [newFeedbackTitle, setNewFeedbackTitle] = useState("");
-    const handleNewFeedbackTitle = (event) => {
-        setNewFeedbackTitle(event.target.value)
-    }
+const AddFeedback = ({nameRef, detailRef, showError, showErrorName, handleAddNewFeedbackClick, handleAddFeedbackClick, handleNewFeedbackDetail, newFeedbackDetail, handleNewFeedbackTitle, newFeedbackTitle, options, categories, handleCategorySelected}) => {
     return (
         <div className="feedback-detail-content">
             <button className='go-back' onClick={handleAddFeedbackClick}><Arrow/>Go back</button>
@@ -24,10 +20,19 @@ const AddFeedback = ({handleAddFeedbackClick}) => {
                 <div className="suggestion-empty-title">Create New Feedback</div>
                 <div className="user-name">Feedback Title</div>
                 <div className="user-username">Add a short, descriptive headline</div>
-                <input type="text" value={newFeedbackTitle} onChange={handleNewFeedbackTitle}/>
+                <input ref={nameRef} type="text" value={newFeedbackTitle} onChange={handleNewFeedbackTitle}/>
+                {showErrorName&& <div style={{ color: "red" }}>can't be empty</div>}
                 <div className="user-name">Category</div>
                 <div className="user-username">Choose a category for your feedback</div>
-                <select name="" id=""></select>
+                <Select
+                options={options}
+                value={categories}
+                onChange={handleCategorySelected}/>
+                <div>Feedback Detail</div>
+                <textarea ref={detailRef} value={newFeedbackDetail} onChange={handleNewFeedbackDetail} name="" id="" cols="30" rows="10"></textarea>
+                {showError&& <div style={{ color: "red" }}>can't be empty</div>}
+                <button onClick={handleAddFeedbackClick}>Cancel</button>
+                <button onClick={handleAddNewFeedbackClick}>Add Feedback</button>
             </div>
         </div>
     )

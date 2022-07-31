@@ -11,14 +11,16 @@ export const Arrow = styled("div")`
     -webkit-transform: rotate(-135deg);
 `;
 
-const SuggestionContent = ({data, handleSuggestionClick}) => {
+const SuggestionContent = ({data, handleSuggestionClick, addPlusOneUpvote, handleAddFeedbackClick}) => {
     // const amountComments = data.filter((item) => item.productRequests.filter((req) => req.comments.map((comment) => comment.id))).length;
   return (
     <div className='content'>
-        {data.length > 0? data.map((req) => req.productRequests.map((item) => (
-            <div key={item.id} className="suggestion-item" onClick={() => handleSuggestionClick(item)}>
+        {data.length > 0? data.map((item) => (
+            <div key={item.id}>
+                <button onClick={() => addPlusOneUpvote(item)} className='upvote'><Arrow/>{item.upvotes}</button>
+            <div className="suggestion-item" onClick={() => handleSuggestionClick(item)}>
             <div className='suggestion-info'>
-            <button className='upvote'><Arrow/>{item.upvotes}</button>
+            
             <div>
                 <div className="suggestion-title">{item.title}</div>
                 <div className="suggestion-descr">{item.description}</div>
@@ -28,10 +30,11 @@ const SuggestionContent = ({data, handleSuggestionClick}) => {
             <div className='suggestion-comments'><img src="./assets/shared/icon-comments.svg" alt="comments" />{item.comments? item.comments.length: 0}</div>
             
         </div>
-        ))):<div className='content-empty'><img className='suggestion-empty' src='./assets/suggestions/illustration-empty.svg' alt='No data available' />
+            </div>
+        )):<div className='content-empty'><img className='suggestion-empty' src='./assets/suggestions/illustration-empty.svg' alt='No data available' />
         <div className='suggestion-empty-title'>There is no feedback yet.</div>
         <div className="suggestion-descr margin">Got a suggestion? Found a bug that needs to be squashed? We love hearing about new ideas to improve our app.</div>
-        <button className='add-feedback'>+ Add Feedback</button>
+        <button onClick={handleAddFeedbackClick} className='add-feedback'>+ Add Feedback</button>
         </div>
         }
     </div>

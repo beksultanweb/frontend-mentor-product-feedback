@@ -1,11 +1,5 @@
 [
-{
-  "currentUser": {
-    "image": "./assets/user-images/image-zena.jpg",
-    "name": "Zena Kelley",
-    "username": "velvetround"
-  },
-  "productRequests": [
+
     {
       "id": 1,
       "title": "Add tags for solutions",
@@ -299,6 +293,6 @@
         }
       ]
     }
-  ]
-}
+  
+
 ]

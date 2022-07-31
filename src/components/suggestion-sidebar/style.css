@@ -100,7 +100,7 @@ button{
 button:hover{
     background-color: #CFD7FF;
 }
-.categories-btn:active{
+.categories-btn-active{
     background-color: #4661E6;
     color: #FFFFFF;
 }
