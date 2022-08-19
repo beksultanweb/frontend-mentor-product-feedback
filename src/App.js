@@ -4,7 +4,7 @@ import Sidebar from './components/suggestion-sidebar';
 import SuggestionContent from './components/suggestion-content';
 import FeedbackDetail from './components/feedback-detail';
 import AddFeedback from './components/addfeedback';
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 // import { useForm, Controller } from "react-hook-form";
 import data from "./data/data.json"
 import {v4 as myNewId} from "uuid";
@@ -59,7 +59,7 @@ const updates = [
 ]
 
 function App() {
-  const checkStorageItems = JSON.parse(localStorage.getItem("item"))
+  const checkStorageItems = JSON.parse(window.localStorage.getItem("item"))
   const [suggestions, setSuggestions] = useState(checkStorageItems?checkStorageItems:data);
   const [feedbackDetailOpened, setFeedbackDetailOpened] = useState(false);
   const [addFeedbackOpened, setAddFeedbackOpened] = useState(false);
@@ -296,35 +296,13 @@ function App() {
   }
 
   //replies
-  const [reply, setReply] = useState(false);
   // console.log(data.map(com => com.comments.map(comment => comment.id === 1)));
-  // console.log(data
-  //   .filter((el) => el.id === reply.productId)[0]
-  //   .comments.filter((el) => el.id === reply.commentId)[0])
+  // data.filter((el) => el.id === reply.productId)[0].comments.filter((el) => el.id === reply.commentId)[0]
+  // console.log(data.filter((el) => el.id === reply.productId)[0].comments.filter((el) => el.id === reply.commentId)[0])
+  // console.log(data && data.comments.map((comment) => comment.id));
   // console.log(reply);
+  // const isReplying = reply && reply.type === 'replying' && data.comments?.map((comment) => comment.id) === reply.id;
   
-  // const isReplying = reply && reply.type === 'replying';
-  const [newReply, setNewReply] = useState();
-  
-  const handleChangeReply = (event) => {
-      setNewReply(event.target.value)
-  }
-
-  const handleAddReply = (item, id) => {
-    if(newReply !== ""){
-      const newTabs = [...checkStorageItems?checkStorageItems:data];
-      console.log(id)
-      const newItem = {"content": newReply, "replyingTo": item.user.name, "user": {"image": "./assets/user-images/image-suzanne.jpg", "name": "Suzanne Chang", "username": "upbeat1811"}};
-      const indexOfElement = newTabs.map((tab) => tab.comments.filter((comment) => comment.id === id))
-      console.log(indexOfElement);
-      // findIndex((obj) => obj.id===id));
-      newTabs.comments[indexOfElement].replies.push(newItem);
-      setSuggestions(newTabs)
-      const storageNewItem = JSON.stringify(newTabs);
-      localStorage.setItem('item', storageNewItem);
-      setNewComment("")
-    }
-  }
   //undefined Edit
   // const { handleSubmit, control, setValue } = useForm();
   
@@ -352,7 +330,14 @@ function App() {
   //     newTabs[indexOfElement].upvotes++;
       
   //   setSuggestions(newTabs)
-
+  useEffect(() => {
+    if (!window.localStorage.getItem("item")) {
+        window.localStorage.setItem(
+            "item",
+            JSON.stringify(data)
+        );
+    }
+}, []);
   //   const storageNewItem = JSON.stringify(newTabs);
   //   localStorage.setItem('item', storageNewItem);
   // }
@@ -364,7 +349,7 @@ function App() {
           <Route
           path='/:id'
           element={
-            <FeedbackDetail addPlusOneUpvote={addPlusOneUpvote} setReply={setReply} isReplying={reply} newReply={newReply} handleChangeReply={handleChangeReply} handleAddReply={handleAddReply} commentRef={commentRef} showErrorComment={showErrorComment} AddComment={AddComment} newComment={newComment} handleAddComment={handleAddComment} limit={limit} handleEditFeedbackClick={handleEditFeedbackClick} handleSuggestionClick={handleSuggestionClick} data={suggestions}/>
+            <FeedbackDetail setSuggestions={setSuggestions} addPlusOneUpvote={addPlusOneUpvote} showErrorComment={showErrorComment} AddComment={AddComment} newComment={newComment} handleAddComment={handleAddComment} limit={limit} handleEditFeedbackClick={handleEditFeedbackClick} handleSuggestionClick={handleSuggestionClick} data={suggestions}/>
           }
           />
           <Route
