@@ -12,13 +12,41 @@ export const Arrow = styled("div")`
     -webkit-transform: rotate(-135deg);
 `;
 
-const SuggestionContent = ({data, handleSuggestionClick, addPlusOneUpvote, handleAddFeedbackClick}) => {
+const SuggestionContent = ({selectedOption, data, handleSuggestionClick, addPlusOneUpvote, handleAddFeedbackClick}) => {
     // const amountComments = data.filter((item) => item.productRequests.filter((req) => req.comments.map((comment) => comment.id))).length;
     // let { id } = useParams();
-    console.log(data)
+    // console.log(selectedOption[0].value);
     return (
     <div className='content'>
-        {data.length > 0? data.map((item) => (
+        {data.length > 0? [...data] 
+        .sort((a,b) => {
+            let products = selectedOption;
+            let sortBy = products.split(" ")[1];
+            if (
+                (a.comments && b.comments && sortBy === "Comments" &&
+                    a.comments.length >
+                        b.comments.length) ||
+                (a.comments && b.comments && sortBy === "Upvotes" &&
+                    a.upvotes > b.upvotes)
+            ) {
+                return products.split(" ")[0] === "Most"
+                    ? -1
+                    : 1;
+            }
+            if (
+                (a.comments && b.comments && sortBy === "Comments" &&
+                    a.comments.length <
+                        b.comments.length) ||
+                (a.comments && b.comments && sortBy === "Upvotes" &&
+                    a.upvotes < b.upvotes)
+            ) {
+                return products.split(" ")[0] === "Most"
+                    ? 1
+                    : -1;
+            }
+            return 0;
+        })
+        .map((item) => (
             <div key={item.id}>
                 <button onClick={() => addPlusOneUpvote(item)} className='upvote'><Arrow/>{item.upvotes}</button>
             <Link to={{

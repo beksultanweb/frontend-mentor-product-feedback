@@ -73,7 +73,7 @@ const SuggestionHeader = ({selectedOption, handleChange, handleAddFeedbackClick,
             <div>
                 <Select
                 options={options}
-                value={selectedOption}
+                value={options.filter((option) => option.label === selectedOption)}
                 onChange={handleChange}
                 isSearchable={false}
                 styles={styles}

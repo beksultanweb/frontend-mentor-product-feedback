@@ -69,9 +69,9 @@ function App() {
   const [feedbackCategories, setFeedbackCategories] = useState(categories.filter((option) => option.label === "feature"))
 
   const defaultValueIs = options.filter((option) => option.label === "Most Comments")
-  const [selectedOption, setSelectedOption] = useState(defaultValueIs);
+  const [selectedOption, setSelectedOption] = useState(defaultValueIs[0].label);
   const handleChange = (value) => {
-    setSelectedOption(value);
+    setSelectedOption(value.label);
   };
   const handleCategorySelected = (value) => {
     setFeedbackCategories(value)
@@ -380,7 +380,7 @@ function App() {
           element={<div className="suggestion-components">
           <Sidebar filterType={filterType} handleFilterItems={handleFilterItems} buttons={buttons}/>
           <div className='right-bar'><SuggestionHeader handleAddFeedbackClick={handleAddFeedbackClick} handleChange={handleChange} options={options} selectedOption={selectedOption}/>
-          <SuggestionContent addPlusOneUpvote={addPlusOneUpvote} data={filteredItems} handleSuggestionClick={handleSuggestionClick} handleAddFeedbackClick={handleAddFeedbackClick}/>
+          <SuggestionContent selectedOption={selectedOption} addPlusOneUpvote={addPlusOneUpvote} data={filteredItems} handleSuggestionClick={handleSuggestionClick} handleAddFeedbackClick={handleAddFeedbackClick}/>
           </div>
           </div>}
           />
