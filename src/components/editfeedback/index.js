@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import "./style.css";
 // import { useState } from "react";
+import { Link, useParams } from "react-router-dom";
 import Select from "react-select";
 
 export const Arrow = styled("div")`
@@ -13,12 +14,17 @@ export const Arrow = styled("div")`
     -webkit-transform: rotate(135deg);
 `;
 
-const EditFeedback = ({Controller, handleSubmit, onSubmitData, control, handleChanged, handleChanged2, nameRef, detailRef, showError, showErrorName, updates, updateStatus, handleUpdateStatus, handleEditFeedback, handleEditFeedbackClick, data, handleAddFeedbackClick, handleNewFeedbackDetail, newFeedbackDetail, handleNewFeedbackTitle, newFeedbackTitle, options, categories, handleCategorySelected}) => {
-    
+const EditFeedback = ({handleSuggestionClick, nameRef, detailRef, showError, showErrorName, updates, updateStatus, handleUpdateStatus, handleEditFeedback, handleEditFeedbackClick, data, handleAddFeedbackClick, handleNewFeedbackDetail, newFeedbackDetail, handleNewFeedbackTitle, newFeedbackTitle, options, categories, handleCategorySelected}) => {
+    const params = useParams();
+    console.log(params);
     return (
         <div className="feedback-detail-content">
-            <button className='go-back' onClick={handleEditFeedbackClick}><Arrow/>Go back</button>
-            <form onSubmit={handleSubmit(handleEditFeedback)}>
+            {data.filter((item) => String(item.id) === String(params.id)).map((data) => (
+            <div key={data.id}>
+            <Link to={{
+                pathname: `/${data.id}`    
+            }}><button className='go-back'><Arrow/>Go back</button></Link>
+            
         
             <div className="feedback-detail-comments">
                 <div className="suggestion-empty-title">Editing '{data.title}'</div>
@@ -30,32 +36,20 @@ const EditFeedback = ({Controller, handleSubmit, onSubmitData, control, handleCh
                 <div className="user-name">Category</div>
                 <div className="user-username">Choose a category for your feedback</div>
                 
-                <Controller
-          name="controlledSelect"
-          control={control}
-          defaultValue={options[0]}
-        //   value={categories}
-          render={() => (
+                
                 <Select
                 options={options}
                 value={categories}
-                onChange={handleChanged}/>
-                )}
-        />
+                onChange={handleCategorySelected}/>
+                
                 <div>Update Status</div>
-                <Controller
-          name="controlledSelectVal"
-          control={control}
-          defaultValue={updates[0]}
-        //   value={updateStatus}
-          render={() => (
+                
                 <Select
                 options={updates}
                 value={updateStatus}
-                onChange={handleChanged2}
+                onChange={handleUpdateStatus}
                 />
-                )}
-        />
+                
                 <div>Feedback Detail</div>
                 <textarea ref={detailRef} value={newFeedbackDetail} onChange={handleNewFeedbackDetail} name="" id="" cols="30" rows="10"></textarea>
                 {showError&& <div style={{ color: "red" }}>can't be empty</div>}
@@ -65,10 +59,12 @@ const EditFeedback = ({Controller, handleSubmit, onSubmitData, control, handleCh
                 </div>
                
                 <button>Delete</button>
-                <button onClick={handleEditFeedbackClick}>Cancel</button>
-                <button type="submit">Edit Feedback</button>
-                
-              </form>
+                <Link to={{
+                pathname: `/${data.id}`    
+            }}><button>Cancel</button></Link>
+                <button onClick={() => handleEditFeedback(data.id)} type="submit">Edit Feedback</button>
+                </div>
+        ))}
         </div>
     )
 }

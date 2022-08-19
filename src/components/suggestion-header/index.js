@@ -1,5 +1,6 @@
 import "./style.css";
 import Select, { components } from "react-select";
+import { Link } from "react-router-dom";
 
 const styles = {
     control: (styles) => {
@@ -89,7 +90,9 @@ const SuggestionHeader = ({selectedOption, handleChange, handleAddFeedbackClick,
             
             </div>
             </div>
-            <button className="add-feedback" onClick={handleAddFeedbackClick}>+ Add Feedback</button>
+            <Link to="/addfeedback">
+            <button className="add-feedback">+ Add Feedback</button>
+            </Link>
         </div>
     )
 }

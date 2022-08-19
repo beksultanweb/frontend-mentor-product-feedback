@@ -5,10 +5,12 @@ import SuggestionContent from './components/suggestion-content';
 import FeedbackDetail from './components/feedback-detail';
 import AddFeedback from './components/addfeedback';
 import React, { useState, useRef } from 'react';
-import { useForm, Controller } from "react-hook-form";
+// import { useForm, Controller } from "react-hook-form";
 import data from "./data/data.json"
 import {v4 as myNewId} from "uuid";
 import EditFeedback from './components/editfeedback';
+
+import { BrowserRouter, Routes, Route } from "react-router-dom"
 
 const buttons = [
   {
@@ -66,7 +68,7 @@ function App() {
   const [updateStatus, setUpdateStatus] = useState(updates.filter((option) => option.label === "Planned"))
   const [feedbackCategories, setFeedbackCategories] = useState(categories.filter((option) => option.label === "feature"))
 
-  const defaultValueIs = options.filter((option) => option.label === "Most Upvotes")
+  const defaultValueIs = options.filter((option) => option.label === "Most Comments")
   const [selectedOption, setSelectedOption] = useState(defaultValueIs);
   const handleChange = (value) => {
     setSelectedOption(value);
@@ -98,14 +100,19 @@ function App() {
       ? suggestions.filter((item) => item.category === "bug")
       : suggestions.filter((item) => item.category === "feature");
 
+  
+  
   const handleSuggestionClick = ({id}) => {
     if(!feedbackDetailOpened){
+      console.log("last testing: ", suggestions)
+      // Переписывай на routes! id через url будешь передавать, useState даже не нужны будут
+      // Дизайн обучалки секретный энсвер лучше красиво подать и в модалке текст по центру
       // const filteredSuggestion = data.map((req) => req.productRequests.filter((item) => item.id === id))
       const filteredSuggestion = suggestions.find((item) => item.id === id)
       // const filteredCheckStorageItems = checkStorageItems.find((item) => item.id === id)
 
       setSuggestions(filteredSuggestion)
-      console.log(suggestions)
+      
     }
     
       // const filteredSuggestion = suggestions
@@ -125,9 +132,18 @@ function App() {
   const handleAddFeedbackClick = () => {
     setAddFeedbackOpened(!addFeedbackOpened)
   }
-  const handleEditFeedbackClick = () => {
-    setFeedbackDetailOpened(!feedbackDetailOpened)
-    setEditFeedbackOpened(!addFeedbackOpened)
+  const handleEditFeedbackClick = ({id}) => {
+
+
+    if(!editFeedbackOpened){
+      setSuggestions(checkStorageItems?checkStorageItems:data) 
+      const filteredSuggestion = suggestions.find((item) => item.id === id)
+      
+      setSuggestions(filteredSuggestion) 
+    }
+    
+    setFeedbackDetailOpened((prevFeedback)=>!prevFeedback)
+    setEditFeedbackOpened((prevEditFeedback)=>!prevEditFeedback)
   }
   
   //Counter upvotes
@@ -150,6 +166,7 @@ function App() {
   const [newFeedbackTitle, setNewFeedbackTitle] = useState("");
   const [showError, setShowError] = useState(false)
   const [showErrorName, setShowErrorName] = useState(false)
+  const [showErrorComment, setShowErrorComment] = useState(false)
   const handleNewFeedbackTitle = (event) => {
     setNewFeedbackTitle(event.target.value)
   }
@@ -159,6 +176,8 @@ function App() {
   }
   const nameRef = useRef()
   const detailRef = useRef()
+  const commentRef = useRef()
+
   const handleAddNewFeedbackClick = () => {
     // const filteredSuggestion = data[0].productRequests
     // console.log(filteredSuggestion)
@@ -198,26 +217,28 @@ function App() {
     
   }
   
-  const handleEditFeedback = (dataSet, {id}) => {
+  const handleEditFeedback = (id) => {
     console.log(newFeedbackTitle);
     console.log(newFeedbackDetail);
-    console.log(dataSet.controlledSelect.label);
-    console.log(dataSet.controlledSelectVal.label);
-    console.log(data)
+    console.log(feedbackCategories.label);
+    console.log(updateStatus.label);
+    console.log("suggestions: ", suggestions)
+    console.log(id);
     if(newFeedbackDetail !== "" && newFeedbackTitle !== ""){
-      const newTabs = [...data];
-      const indexOfElement = newTabs.findIndex(obj=>obj.id===id);
+      const newTabs = [...checkStorageItems?checkStorageItems:data];
+      // console.log("testingL: ", suggestions);
+      const indexOfElement = newTabs.findIndex((obj) => obj.id===id);
+      // console.log("newTabs: ", indexOfElement);
       newTabs[indexOfElement].title = newFeedbackTitle;
-      console.log("index of : ", indexOfElement);
-      newTabs[indexOfElement].category = dataSet.controlledSelect.label;
-      newTabs[indexOfElement].status = dataSet.controlledSelectVal.label;
-      newTabs[indexOfElement].description = newFeedbackDetail.label;
+      // console.log("index of : ", indexOfElement);
+      newTabs[indexOfElement].category = feedbackCategories.label?feedbackCategories.label:"feature";
+      newTabs[indexOfElement].status = updateStatus.label?updateStatus.label:"Planned";
+      newTabs[indexOfElement].description = newFeedbackDetail;
       console.log(newTabs)
     setSuggestions(newTabs)
     // console.log(newTabs)
     const storageNewItem = JSON.stringify(newTabs);
     localStorage.setItem('item', storageNewItem);
-    handleEditFeedbackClick()
     setNewFeedbackTitle("")
     setNewFeedbackDetail("")
     setFeedbackCategories(categories.filter((option) => option.label === "feature"))
@@ -242,26 +263,88 @@ function App() {
     }
   }
 
+  //Comments
+  const [newComment, setNewComment] = useState("");
+    const [limit, setLimit] = useState(250);
+    const handleAddComment = (event) =>{
+        setNewComment(event.target.value.slice(0, 250))
+        setLimit(limit-1)
+    }
+  const AddComment = ({id}) => {
+    if(newComment !== ""){
+      const newTabs = [...checkStorageItems?checkStorageItems:data];
+      // console.log("testingL: ", suggestions);
+      const newItem = {"id": myNewId(), "content": newComment, "user": {"image": "./assets/user-images/image-suzanne.jpg", "name": "Suzanne Chang", "username": "upbeat1811"}};
+      const indexOfElement = newTabs.findIndex((obj) => obj.id===id);
+      // console.log("newTabs: ", indexOfElement);
+      newTabs[indexOfElement].comments.push(newItem);
+      setSuggestions(newTabs)
+    // console.log(newTabs)
+    const storageNewItem = JSON.stringify(newTabs);
+    localStorage.setItem('item', storageNewItem);
+    setNewComment("")
+    }
+    if (newComment === ""){
+      setShowErrorComment(true)
+      commentRef.current.focus();
+      
+    }
+    else {
+      setShowErrorComment(false)
+      
+    }
+  }
+
+  //replies
+  const [reply, setReply] = useState(false);
+  // console.log(data.map(com => com.comments.map(comment => comment.id === 1)));
+  // console.log(data
+  //   .filter((el) => el.id === reply.productId)[0]
+  //   .comments.filter((el) => el.id === reply.commentId)[0])
+  // console.log(reply);
+  
+  // const isReplying = reply && reply.type === 'replying';
+  const [newReply, setNewReply] = useState();
+  
+  const handleChangeReply = (event) => {
+      setNewReply(event.target.value)
+  }
+
+  const handleAddReply = (item, id) => {
+    if(newReply !== ""){
+      const newTabs = [...checkStorageItems?checkStorageItems:data];
+      console.log(id)
+      const newItem = {"content": newReply, "replyingTo": item.user.name, "user": {"image": "./assets/user-images/image-suzanne.jpg", "name": "Suzanne Chang", "username": "upbeat1811"}};
+      const indexOfElement = newTabs.map((tab) => tab.comments.filter((comment) => comment.id === id))
+      console.log(indexOfElement);
+      // findIndex((obj) => obj.id===id));
+      newTabs.comments[indexOfElement].replies.push(newItem);
+      setSuggestions(newTabs)
+      const storageNewItem = JSON.stringify(newTabs);
+      localStorage.setItem('item', storageNewItem);
+      setNewComment("")
+    }
+  }
   //undefined Edit
-  const { handleSubmit, control, setValue } = useForm();
+  // const { handleSubmit, control, setValue } = useForm();
   
     // const onSubmitData = (data) => {
     //   setDebug(data.controlledSelect.label)
     //   setDebug2(data.controlledSelectVal.label)
     // };
 
-    const handleChanged = (change) => {
-        setValue("controlledSelect", change, {
-        shouldDirty: true
-        });
-        setFeedbackCategories(change)
-    };
-    const handleChanged2 = (change) => {
-        setValue("controlledSelectVal", change, {
-        shouldDirty: true
-        });
-        setUpdateStatus(change)
-    };
+    // const handleChanged = (change) => {
+    //     setValue("controlledSelect", change, {
+    //     shouldDirty: true
+    //     });
+    //     setFeedbackCategories(change)
+    // };
+    // const handleChanged2 = (change) => {
+    //     setValue("controlledSelectVal", change, {
+    //     shouldDirty: true
+    //     });
+    //     setUpdateStatus(change)
+    // };
 
   // const editUpvote = ({id}) => {
   //   const newTabs = [...data];
@@ -276,16 +359,33 @@ function App() {
   // console.log("suggestions", suggestions)
   return (
     <div className="App">
-      {feedbackDetailOpened? <FeedbackDetail handleEditFeedbackClick={handleEditFeedbackClick} handleSuggestionClick={handleSuggestionClick} data={suggestions}/>
-      :addFeedbackOpened? <AddFeedback nameRef={nameRef} detailRef={detailRef} showErrorName={showErrorName} showError={showError} handleAddNewFeedbackClick={handleAddNewFeedbackClick} newFeedbackDetail={newFeedbackDetail} handleNewFeedbackDetail={handleNewFeedbackDetail} newFeedbackTitle={newFeedbackTitle} handleNewFeedbackTitle={handleNewFeedbackTitle} handleAddFeedbackClick={handleAddFeedbackClick} handleCategorySelected={handleCategorySelected} categories={feedbackCategories} options={categories}/>
-      :editFeedbackOpened? <EditFeedback Controller={Controller} handleSubmit={handleSubmit} control={control} handleChanged={handleChanged} handleChanged2={handleChanged2} nameRef={nameRef} detailRef={detailRef} showErrorName={showErrorName} showError={showError} newFeedbackDetail={newFeedbackDetail} handleNewFeedbackDetail={handleNewFeedbackDetail} handleNewFeedbackTitle={handleNewFeedbackTitle} newFeedbackTitle={newFeedbackTitle} handleEditFeedback={handleEditFeedback} handleUpdateStatus={handleUpdateStatus} updateStatus={updateStatus} updates={updates} options={categories} categories={feedbackCategories} handleCategorySelected={handleCategorySelected} data={suggestions} handleAddFeedbackClick={handleAddFeedbackClick} handleEditFeedbackClick={handleEditFeedbackClick}/>
-      : <div className="suggestion-components">
-      <Sidebar filterType={filterType} handleFilterItems={handleFilterItems} buttons={buttons}/>
-      <div className='right-bar'><SuggestionHeader handleAddFeedbackClick={handleAddFeedbackClick} handleChange={handleChange} options={options} selectedOption={selectedOption}/>
-      <SuggestionContent addPlusOneUpvote={addPlusOneUpvote} data={filteredItems} handleSuggestionClick={handleSuggestionClick} handleAddFeedbackClick={handleAddFeedbackClick}/>
-      </div>
-      </div>
-      }
+      <BrowserRouter>
+        <Routes>
+          <Route
+          path='/:id'
+          element={
+            <FeedbackDetail addPlusOneUpvote={addPlusOneUpvote} setReply={setReply} isReplying={reply} newReply={newReply} handleChangeReply={handleChangeReply} handleAddReply={handleAddReply} commentRef={commentRef} showErrorComment={showErrorComment} AddComment={AddComment} newComment={newComment} handleAddComment={handleAddComment} limit={limit} handleEditFeedbackClick={handleEditFeedbackClick} handleSuggestionClick={handleSuggestionClick} data={suggestions}/>
+          }
+          />
+          <Route
+          path='/addfeedback'
+          element={<AddFeedback nameRef={nameRef} detailRef={detailRef} showErrorName={showErrorName} showError={showError} handleAddNewFeedbackClick={handleAddNewFeedbackClick} newFeedbackDetail={newFeedbackDetail} handleNewFeedbackDetail={handleNewFeedbackDetail} newFeedbackTitle={newFeedbackTitle} handleNewFeedbackTitle={handleNewFeedbackTitle} handleAddFeedbackClick={handleAddFeedbackClick} handleCategorySelected={handleCategorySelected} categories={feedbackCategories} options={categories}/>}
+          />
+          <Route
+          path='/editfeedback/:id'
+          element={<EditFeedback handleSuggestionClick={handleSuggestionClick} nameRef={nameRef} detailRef={detailRef} showErrorName={showErrorName} showError={showError} newFeedbackDetail={newFeedbackDetail} handleNewFeedbackDetail={handleNewFeedbackDetail} handleNewFeedbackTitle={handleNewFeedbackTitle} newFeedbackTitle={newFeedbackTitle} handleEditFeedback={handleEditFeedback} handleUpdateStatus={handleUpdateStatus} updateStatus={updateStatus} updates={updates} options={categories} categories={feedbackCategories} handleCategorySelected={handleCategorySelected} data={suggestions} handleAddFeedbackClick={handleAddFeedbackClick} handleEditFeedbackClick={handleEditFeedbackClick}/>}
+          />
+          <Route
+          path='/'
+          element={<div className="suggestion-components">
+          <Sidebar filterType={filterType} handleFilterItems={handleFilterItems} buttons={buttons}/>
+          <div className='right-bar'><SuggestionHeader handleAddFeedbackClick={handleAddFeedbackClick} handleChange={handleChange} options={options} selectedOption={selectedOption}/>
+          <SuggestionContent addPlusOneUpvote={addPlusOneUpvote} data={filteredItems} handleSuggestionClick={handleSuggestionClick} handleAddFeedbackClick={handleAddFeedbackClick}/>
+          </div>
+          </div>}
+          />
+        </Routes>
+      </BrowserRouter>
     </div>
   );
 }

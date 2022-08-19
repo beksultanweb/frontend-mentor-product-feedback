@@ -1,6 +1,7 @@
 import React from 'react'
 import "./style.css";
 import styled from "styled-components";
+import { Link } from 'react-router-dom';
 
 export const Arrow = styled("div")`
     border: solid #4661E6;
@@ -13,12 +14,19 @@ export const Arrow = styled("div")`
 
 const SuggestionContent = ({data, handleSuggestionClick, addPlusOneUpvote, handleAddFeedbackClick}) => {
     // const amountComments = data.filter((item) => item.productRequests.filter((req) => req.comments.map((comment) => comment.id))).length;
-  return (
+    // let { id } = useParams();
+    console.log(data)
+    return (
     <div className='content'>
         {data.length > 0? data.map((item) => (
             <div key={item.id}>
                 <button onClick={() => addPlusOneUpvote(item)} className='upvote'><Arrow/>{item.upvotes}</button>
-            <div className="suggestion-item" onClick={() => handleSuggestionClick(item)}>
+            <Link to={{
+                pathname: `/${item.id}`    
+            }}
+            style={{textDecoration: 'none'}}
+            >
+            <div className="suggestion-item">
             <div className='suggestion-info'>
             
             <div>
@@ -30,11 +38,14 @@ const SuggestionContent = ({data, handleSuggestionClick, addPlusOneUpvote, handl
             <div className='suggestion-comments'><img src="./assets/shared/icon-comments.svg" alt="comments" />{item.comments? item.comments.length: 0}</div>
             
         </div>
+        </Link>
             </div>
         )):<div className='content-empty'><img className='suggestion-empty' src='./assets/suggestions/illustration-empty.svg' alt='No data available' />
         <div className='suggestion-empty-title'>There is no feedback yet.</div>
         <div className="suggestion-descr margin">Got a suggestion? Found a bug that needs to be squashed? We love hearing about new ideas to improve our app.</div>
-        <button onClick={handleAddFeedbackClick} className='add-feedback'>+ Add Feedback</button>
+        <Link to="/addfeedback">
+        <button className='add-feedback'>+ Add Feedback</button>
+        </Link>
         </div>
         }
     </div>

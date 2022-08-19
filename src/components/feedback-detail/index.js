@@ -1,6 +1,7 @@
-import React, { useState } from 'react'
+import React from 'react'
 import "./style.css";
 import styled from "styled-components";
+import { Link, useParams } from 'react-router-dom';
 
 export const Arrow = styled("div")`
     border: solid #4661E6;
@@ -21,21 +22,24 @@ export const ArrowUp = styled("div")`
     -webkit-transform: rotate(-135deg);
 `;
 
-const FeedbackDetail = ({handleSuggestionClick, addPlusOneUpvote, handleEditFeedbackClick, data}) => {
+const FeedbackDetail = ({setReply, isReplying, newReply, handleChangeReply, handleAddReply, commentRef, showErrorComment, limit, handleAddComment, AddComment, newComment, addPlusOneUpvote, data}) => {
     // console.log("data: ", data)
-    const [newComment, setNewComment] = useState("");
-    const [limit, setLimit] = useState(250);
-    const handleAddComment = (event) =>{
-        setNewComment(event.target.value.slice(0, 250))
-        setLimit(limit-1)
-    }
-    // const amountComments = data.filter((item) => item.productRequests.filter((req) => req.comments.map((comment) => comment.id))).length;
+    
+    
+    const params = useParams();
   return (
+    
     <div className='feedback-detail-content'>
-        <div className='feedback-detail-buttons'><button className='go-back' onClick={handleSuggestionClick}><Arrow/>Go back</button>
-        <button className='edit-feedback' onClick={handleEditFeedbackClick}>Edit Feedback</button></div>
+        {data.filter((item) => String(item.id) === String(params.id)).map((data) => (
             <div key={data.id}>
-            <button className='upvote'><ArrowUp/>{data.upvotes}</button>
+        <div className='feedback-detail-buttons'>
+        <Link to="/"><button className='go-back'><Arrow/>Go back</button>
+        </Link>
+        <Link to={{
+                pathname: `/editfeedback/${data.id}`    
+            }}><button className='edit-feedback'>Edit Feedback</button></Link></div>
+            <div>
+            <button onClick={() => addPlusOneUpvote(data)} className='upvote'><ArrowUp/>{data.upvotes}</button>
             <div className="suggestion-item">
             <div className='suggestion-info'>
             
@@ -61,11 +65,13 @@ const FeedbackDetail = ({handleSuggestionClick, addPlusOneUpvote, handleEditFeed
                 <div className='user-info-names'><div className='user-name'>{item.user.name}</div>
                 <div className='user-username'>{item.user.username}</div></div>
                 </div>
-                <button className='replybtn'>Reply</button>
+                <button className='replybtn' onClick={() => setReply(!isReplying)}>Reply</button>
             </div>
             <div className='user-info-comment'>
                 {item.content}
             </div>
+            {isReplying && <div><textarea ref={commentRef} name="" maxLength={250} value={newReply} onChange={handleChangeReply} placeholder="Type your reply here" id="" cols="30" rows="4"></textarea>
+            <button className='addfeedback' onClick={() => handleAddReply(item, item.id)}>Post Reply</button></div>}
             {item.replies? item.replies.map((reply) => (
             <div key={reply.user.name} className='replies'>
                 <div className='left-hr'></div>
@@ -87,13 +93,17 @@ const FeedbackDetail = ({handleSuggestionClick, addPlusOneUpvote, handleEditFeed
         </div>:""}
         <div className='feedback-detail-comments'>
             <div className="roadmap-title">Add Comment</div>
-            <textarea name="" maxLength={250} value={newComment} onChange={handleAddComment} placeholder="Type your comment here" id="" cols="30" rows="4"></textarea>
+            <textarea ref={commentRef} name="" maxLength={250} value={newComment} onChange={handleAddComment} placeholder="Type your comment here" id="" cols="30" rows="4"></textarea>
+            {showErrorComment && <div style={{ color: "red" }}>can't be empty</div>}
             <div className="user-info-footer">
             <div className='char-left'>{limit} Characters left</div>
-            <button className='add-feedback'>Post Comment</button>
+            <button className='add-feedback' onClick={() => AddComment(data)}>Post Comment</button>
             </div>
         </div>
+        </div>
+        ))}
     </div>
+    
   )
 }
 

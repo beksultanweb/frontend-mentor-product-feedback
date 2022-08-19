@@ -6,7 +6,6 @@
     flex-direction: column;
 }
 .suggestion-item{
-    
     cursor: pointer;
     background-color: #fff;
     display: flex;
