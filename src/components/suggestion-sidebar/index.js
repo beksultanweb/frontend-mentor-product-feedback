@@ -1,7 +1,9 @@
 import React from 'react'
 import "./style.css";
+import { Link } from "react-router-dom";
 
-const Sidebar = ({handleFilterItems, filterType, buttons}) => {
+const Sidebar = ({handleFilterItems, filterType, buttons, data}) => {
+  console.log("side:", data);
   return (
     <div className='sidebar'>
       <div className="gradient-box">
@@ -23,25 +25,25 @@ const Sidebar = ({handleFilterItems, filterType, buttons}) => {
       </div>
       <div className="roadmap">
         <div className='flexible addmargin'><div className="roadmap-title">Roadmap</div>
-        <div className='view'>View</div></div>
+        <Link to='/roadmap'><div className='view'>View</div></Link></div>
         <div className="flexible">
         <div className="roadmap-nodes">
             <div className='circle'></div><div>Planned</div>
             </div>
             
-            <div>2</div>
+            <div>{data.filter((item) => item.status === "Planned").length}</div>
         </div>
         <div className="flexible addmargin">
         <div className="roadmap-nodes">
             <div className='circle inprogress'></div><div>In-Progress</div>
             </div>
-            <div>3</div>
+            <div>{data.filter((item) => item.status === "In-Progress").length}</div>
         </div>
         <div className="flexible addmargin">
         <div className="roadmap-nodes">
             <div className='circle live'></div><div>Live</div>
             </div>
-            <div>1</div>
+            <div>{data.filter((item) => item.status === "Live").length}</div>
         </div>
       </div>
     </div>

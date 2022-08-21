@@ -14,20 +14,20 @@ export const Arrow = styled("div")`
     -webkit-transform: rotate(135deg);
 `;
 
-const EditFeedback = ({handleSuggestionClick, nameRef, detailRef, showError, showErrorName, updates, updateStatus, handleUpdateStatus, handleEditFeedback, handleEditFeedbackClick, data, handleAddFeedbackClick, handleNewFeedbackDetail, newFeedbackDetail, handleNewFeedbackTitle, newFeedbackTitle, options, categories, handleCategorySelected}) => {
+const EditFeedback = ({handleSuggestionClick, handleDeleteFeedback, nameRef, detailRef, showError, showErrorName, updates, updateStatus, handleUpdateStatus, handleEditFeedback, handleEditFeedbackClick, data, handleAddFeedbackClick, handleNewFeedbackDetail, newFeedbackDetail, handleNewFeedbackTitle, newFeedbackTitle, options, categories, handleCategorySelected}) => {
     const params = useParams();
     console.log(params);
     return (
         <div className="feedback-detail-content">
-            {data.filter((item) => String(item.id) === String(params.id)).map((data) => (
-            <div key={data.id}>
+            {data.filter((item) => String(item.id) === String(params.id)).map((product) => (
+            <div key={product.id}>
             <Link to={{
-                pathname: `/${data.id}`    
+                pathname: `/${product.id}`    
             }}><button className='go-back'><Arrow/>Go back</button></Link>
             
         
             <div className="feedback-detail-comments">
-                <div className="suggestion-empty-title">Editing '{data.title}'</div>
+                <div className="suggestion-empty-title">Editing '{product.title}'</div>
                 
                 <div className="user-name">Feedback Title</div>
                 <div className="user-username">Add a short, descriptive headline</div>
@@ -58,11 +58,11 @@ const EditFeedback = ({handleSuggestionClick, nameRef, detailRef, showError, sho
         
                 </div>
                
-                <button>Delete</button>
+                <Link to='/'><button onClick={() => handleDeleteFeedback(product.id)}>Delete</button></Link>
                 <Link to={{
-                pathname: `/${data.id}`    
+                pathname: `/${product.id}`    
             }}><button>Cancel</button></Link>
-                <button onClick={() => handleEditFeedback(data.id)} type="submit">Edit Feedback</button>
+                <button onClick={() => handleEditFeedback(product.id)} type="submit">Edit Feedback</button>
                 </div>
         ))}
         </div>

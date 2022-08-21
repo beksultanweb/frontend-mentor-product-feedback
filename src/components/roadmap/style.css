@@ -1,0 +1,58 @@
+.roadmap-content{
+    display: flex;
+    margin-top: 48px;
+    flex-direction: row;
+    justify-content: space-between;
+}
+.stages{
+    display: flex;
+    flex-direction: column;
+}
+.progress{
+    border-top: 10px;
+    border-color: blue;
+}
+.roadmap-card{
+    margin-top: 32px;
+    width: 320px;
+    margin-bottom: 24px;
+    padding-top: 32px;
+    padding-left: 32px;
+    padding-right: 30px;
+    padding-bottom: 52px;
+    border-radius: 10px;
+    background-color: #fff;
+}
+.live{
+    border-top: 6px solid #62BCFA;
+}
+.inprogress{
+    border-top: 6px solid #AD1FEA;
+}
+.planned{
+    border-top: 6px solid #F49F85;
+}
+.roadmap-btns{
+    margin-top: 16px;
+    align-items: center;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+.upvote-button{
+    display: flex;
+    align-items: center;
+}
+.null{
+    /* display: block; */
+    flex-direction: row;
+    gap: 7px;
+    width: 60px;
+    height: 40px;
+    position: relative;
+    margin-top: 0;
+    margin-left: 0;
+}
+.suggestion-title:hover{
+    color: #4661E6
+}

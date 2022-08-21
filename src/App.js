@@ -11,6 +11,7 @@ import {v4 as myNewId} from "uuid";
 import EditFeedback from './components/editfeedback';
 
 import { BrowserRouter, Routes, Route } from "react-router-dom"
+import Roadmap from './components/roadmap';
 
 const buttons = [
   {
@@ -54,7 +55,7 @@ const options = [{ value: 'Most Upvotes', label: 'Most Upvotes'},
 
 const updates = [
   { value: 'Planned', label: 'Planned'},
-  { value: 'In-progress', label: 'In-progress'},
+  { value: 'In-Progress', label: 'In-Progress'},
   { value: 'Live', label: 'Live'}
 ]
 
@@ -295,6 +296,18 @@ function App() {
     }
   }
 
+  const handleDeleteFeedback = (id) =>{
+    const newTabs = [...checkStorageItems?checkStorageItems:data];
+      // console.log("testingL: ", suggestions);
+    const indexOfElement = newTabs.findIndex((obj) => obj.id===id);
+    console.log("newTabs: ", indexOfElement);
+    const leftSide = newTabs.slice(0, indexOfElement);
+    const rightSide = newTabs.slice(indexOfElement + 1, newTabs.length);
+    setSuggestions([...leftSide, ...rightSide]);
+    
+    const storageNewItem = JSON.stringify([...leftSide, ...rightSide]);
+    localStorage.setItem('item', storageNewItem);
+  }
   //replies
   // console.log(data.map(com => com.comments.map(comment => comment.id === 1)));
   // data.filter((el) => el.id === reply.productId)[0].comments.filter((el) => el.id === reply.commentId)[0]
@@ -358,17 +371,20 @@ function App() {
           />
           <Route
           path='/editfeedback/:id'
-          element={<EditFeedback handleSuggestionClick={handleSuggestionClick} nameRef={nameRef} detailRef={detailRef} showErrorName={showErrorName} showError={showError} newFeedbackDetail={newFeedbackDetail} handleNewFeedbackDetail={handleNewFeedbackDetail} handleNewFeedbackTitle={handleNewFeedbackTitle} newFeedbackTitle={newFeedbackTitle} handleEditFeedback={handleEditFeedback} handleUpdateStatus={handleUpdateStatus} updateStatus={updateStatus} updates={updates} options={categories} categories={feedbackCategories} handleCategorySelected={handleCategorySelected} data={suggestions} handleAddFeedbackClick={handleAddFeedbackClick} handleEditFeedbackClick={handleEditFeedbackClick}/>}
+          element={<EditFeedback handleDeleteFeedback={handleDeleteFeedback} handleSuggestionClick={handleSuggestionClick} nameRef={nameRef} detailRef={detailRef} showErrorName={showErrorName} showError={showError} newFeedbackDetail={newFeedbackDetail} handleNewFeedbackDetail={handleNewFeedbackDetail} handleNewFeedbackTitle={handleNewFeedbackTitle} newFeedbackTitle={newFeedbackTitle} handleEditFeedback={handleEditFeedback} handleUpdateStatus={handleUpdateStatus} updateStatus={updateStatus} updates={updates} options={categories} categories={feedbackCategories} handleCategorySelected={handleCategorySelected} data={suggestions} handleAddFeedbackClick={handleAddFeedbackClick} handleEditFeedbackClick={handleEditFeedbackClick}/>}
           />
           <Route
           path='/'
           element={<div className="suggestion-components">
-          <Sidebar filterType={filterType} handleFilterItems={handleFilterItems} buttons={buttons}/>
+          <Sidebar data={suggestions} filterType={filterType} handleFilterItems={handleFilterItems} buttons={buttons}/>
           <div className='right-bar'><SuggestionHeader handleAddFeedbackClick={handleAddFeedbackClick} handleChange={handleChange} options={options} selectedOption={selectedOption}/>
           <SuggestionContent selectedOption={selectedOption} addPlusOneUpvote={addPlusOneUpvote} data={filteredItems} handleSuggestionClick={handleSuggestionClick} handleAddFeedbackClick={handleAddFeedbackClick}/>
           </div>
           </div>}
           />
+          <Route
+          path='/roadmap'
+          element={<Roadmap addPlusOneUpvote={addPlusOneUpvote} data={suggestions} handleAddFeedbackClick={handleAddFeedbackClick}/>}/>
         </Routes>
       </BrowserRouter>
     </div>
